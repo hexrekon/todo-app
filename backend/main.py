@@ -9,7 +9,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE", "OPTIONS"], # Ensure DELETE is here
+    allow_methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"], # Ensure DELETE is here
     allow_headers=["*"],)
 
 # This defines what a "Todo" looks like (just a piece of text)
@@ -24,6 +24,12 @@ todo_db = []
 def get_todos():
     return todo_db
 
+@app.get("/api/todos/{index}")
+def get_todo(index: int):
+    if 0 <= index < len(todo_db):
+        return todo_db[index]
+    return {"error": "Invalid index"}
+
 # 2. The "POST" route: Receives a new todo from the frontend
 @app.post("/api/todos")
 def add_todo(todo: Todo):
@@ -35,5 +41,12 @@ async def delete_todo(index: int):
     if 0 <= index < len(todo_db):
         todo_db.pop(index)
         return {"message": "Deleted"}
+    return {"error": "Invalid index"}
+
+@app.put("/api/todos/{index}")
+async def update_todo(index: int, todo: Todo):
+    if 0 <= index < len(todo_db):
+        todo_db[index] = todo.item
+        return {"message": "Updated successfully"}
     return {"error": "Invalid index"}
 
