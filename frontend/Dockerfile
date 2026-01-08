@@ -11,4 +11,4 @@ RUN npm run build
 
 RUN npm install -g serve
 
-CMD ["serve", "-s", "out", "-p", "3000"]
+CMD ["serve", "-s", "out", "-p", "80"]
